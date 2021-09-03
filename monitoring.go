@@ -75,7 +75,7 @@ func New(app int) Client {
 	case Prometheus:
 		return newPrometheus()
 	default:
-		log.Fatal("unknown metric instrument")
+		log.Fatal("unknown monitoring app")
 	}
 	return nil
 }
