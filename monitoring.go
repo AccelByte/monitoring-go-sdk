@@ -46,11 +46,6 @@ const (
 	Decrement
 )
 
-// Metrics hold all the metrics
-type Metrics struct {
-	metrics []Metric
-}
-
 // Metric is the metric we want to serve in the service
 type Metric struct {
 	Name string
@@ -70,8 +65,9 @@ type Metric struct {
 }
 
 type Client interface {
-	Init(labels []Metric)
+	Init()
 	GetHandler() http.Handler
+	SetMetrics(metrics []Metric) Client
 }
 
 func New(app int) Client {

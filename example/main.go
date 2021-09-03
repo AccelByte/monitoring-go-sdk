@@ -37,34 +37,37 @@ func newData() *data {
 func main() {
 	metricData := newData()
 	monitoringClient := monitoring.New(monitoring.Prometheus)
-	metrics := []monitoring.Metric{
-		{
-			Name:           "gauge_metric_test",
-			Desc:           "this metric will always be changed on every 3 second",
-			MetricType:     monitoring.Gauge,
-			OperationType:  monitoring.Set,
-			UpdateInterval: time.Second * 3,
-			Getter:         metricData.getAverage,
-		},
-		{
-			Name:           "counter_metric_test",
-			Desc:           "this metric will always be incremented by 1 every 5 second",
-			MetricType:     monitoring.Counter,
-			OperationType:  monitoring.Increment,
-			UpdateInterval: time.Second * 5,
-		},
-		{
-			Name:           "counter_metric_test_add_by_2",
-			Desc:           "this metric will always be incremented by 2 every 10 second",
-			MetricType:     monitoring.Counter,
-			OperationType:  monitoring.Add,
-			UpdateInterval: time.Second * 10,
-			Getter: func() float64{ return 3 },
-		},
-	}
+		monitoringClient.SetMetrics([]monitoring.Metric{
+				{
+					Name:           "gauge_metric_test",
+					Desc:           "this metric will always be changed on every 3 second",
+					MetricType:     monitoring.Gauge,
+					OperationType:  monitoring.Set,
+					UpdateInterval: time.Second * 3,
+					Getter:         metricData.getAverage,
+				},
+				{
+					Name:           "counter_metric_test",
+					Desc:           "this metric will always be incremented by 1 every 5 second",
+					MetricType:     monitoring.Counter,
+					OperationType:  monitoring.Increment,
+					UpdateInterval: time.Second * 5,
+				},
+				{
+					Name:           "counter_metric_test_add_by_2",
+					Desc:           "this metric will always be incremented by 2 every 10 second",
+					MetricType:     monitoring.Counter,
+					OperationType:  monitoring.Add,
+					UpdateInterval: time.Second * 10,
+					Getter: func() float64{ return 3 },
+				},
+			},
+		).
+		Init()
+
 
 	//
-	monitoringClient.Init(metrics)
+	//monitoringClient.Init(metrics)
 
 	go metricData.listenNewData()
 	go metricData.updateAverage()

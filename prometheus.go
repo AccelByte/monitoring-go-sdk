@@ -27,18 +27,24 @@ import (
 
 type PrometheusClient struct {
 	Handler http.Handler
+	Metrics []Metric
 }
 
-func newPrometheus() *PrometheusClient {
+func newPrometheus() Client {
 	return &PrometheusClient{Handler: promhttp.Handler()}
+}
+
+func (client *PrometheusClient) SetMetrics(metrics []Metric) Client{
+	client.Metrics = metrics
+	return client
 }
 
 func (client *PrometheusClient) GetHandler() http.Handler{
 	return client.Handler
 }
 
-func (client *PrometheusClient) Init(metrics []Metric) {
-	for _, metric := range metrics {
+func (client *PrometheusClient) Init() {
+	for _, metric := range client.Metrics {
 		prometheusJob := client.newJob(metric.MetricType, metric.Name, metric.Desc)
 		go client.runJob(prometheusJob, metric.UpdateInterval, metric.OperationType, metric.Getter)
 	}
