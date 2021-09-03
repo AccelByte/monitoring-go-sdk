@@ -35,6 +35,7 @@ func newPrometheus() Client {
 }
 
 func (client *PrometheusClient) SetMetrics(metrics []Metric) Client{
+	log.Printf("\nsetting metrics %+v\n", metrics)
 	client.Metrics = metrics
 	return client
 }
