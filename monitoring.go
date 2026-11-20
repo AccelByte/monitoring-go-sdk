@@ -65,7 +65,7 @@ type Metric struct {
 }
 
 type Client interface {
-	Init()
+	Init() Client
 	GetHandler() http.Handler
 	SetMetrics(metrics []Metric) Client
 }

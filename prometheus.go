@@ -35,7 +35,6 @@ func newPrometheus() Client {
 }
 
 func (client *PrometheusClient) SetMetrics(metrics []Metric) Client{
-	log.Printf("\nsetting metrics %+v\n", metrics)
 	client.Metrics = metrics
 	return client
 }
@@ -44,11 +43,12 @@ func (client *PrometheusClient) GetHandler() http.Handler{
 	return client.Handler
 }
 
-func (client *PrometheusClient) Init() {
+func (client *PrometheusClient) Init() Client{
 	for _, metric := range client.Metrics {
 		prometheusJob := client.newJob(metric.MetricType, metric.Name, metric.Desc)
 		go client.runJob(prometheusJob, metric.UpdateInterval, metric.OperationType, metric.Getter)
 	}
+	return client
 }
 
 func (client *PrometheusClient) newJob(t int, name, desc string) job {
